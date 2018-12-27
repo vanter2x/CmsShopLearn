@@ -152,7 +152,7 @@ namespace CmsShop.Areas.Admin.Controllers
             return RedirectToAction("EditPage");
         }
 
-        //GET: Admin/Pages/Details
+        //GET: Admin/Pages/Details/id
         [HttpGet]
         public ActionResult Details(int id)
         {
@@ -173,6 +173,22 @@ namespace CmsShop.Areas.Admin.Controllers
             }
 
             return View(model);
+        }
+
+        //GET: Admin/Pages/Delete/id
+        public ActionResult Delete(int id)
+        {
+            using (Db db = new Db())
+            {
+                // pobranie strony do usunięcia
+                PageDTO dto = db.Pages.Find(id);
+
+                db.Pages.Remove(dto);
+
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
