@@ -30,6 +30,7 @@ namespace CmsShop.Areas.Admin.Controllers
             return View();
         }
 
+        //POST: Admin/Pages/AddPage
         [HttpPost]
         public ActionResult AddPage(PageVM model)
         {
@@ -75,6 +76,29 @@ namespace CmsShop.Areas.Admin.Controllers
 
             TempData["SM"] = "Dodałeś nową stronę";
             return RedirectToAction("AddPage");
+        }
+
+        //GET: Admin/Pages/EditPage
+        [HttpGet]
+        public ActionResult EditPage(int id)
+        {
+            PageVM model;
+
+            using (Db db = new Db())
+            {
+                // pobieramy z bazy stronę o podanym id
+                PageDTO dto = db.Pages.Find(id);
+
+                // sprawdzamy czy ta strona istnieje
+                if (dto == null)
+                {
+                    return Content("Strona nie istnieje.");
+                }
+
+                model = new PageVM(dto);
+            }
+
+            return View(model);
         }
     }
 }
