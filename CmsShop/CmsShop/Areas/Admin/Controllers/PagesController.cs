@@ -176,6 +176,7 @@ namespace CmsShop.Areas.Admin.Controllers
         }
 
         //GET: Admin/Pages/Delete/id
+        [HttpGet]
         public ActionResult Delete(int id)
         {
             using (Db db = new Db())
@@ -188,6 +189,28 @@ namespace CmsShop.Areas.Admin.Controllers
                 db.SaveChanges();
             }
 
+            return RedirectToAction("Index");
+        }
+
+        //GET: Admin/Pages/ReorderPages
+        [HttpPost]
+        public ActionResult ReorderPages(int[] id)
+        {
+            using (Db db = new Db())
+            {
+                int count = 1;
+                PageDTO dto;
+
+                //sortowanie stron i zapis na bazie
+                foreach (var pageId in id)
+                {
+                    dto = db.Pages.Find(pageId);
+                    dto.Sorting = count;
+
+                    db.SaveChanges();
+                    count++;
+                }
+            }
             return RedirectToAction("Index");
         }
     }
