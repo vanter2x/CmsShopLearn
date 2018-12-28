@@ -1,4 +1,6 @@
-﻿using CmsShop.Models.Data;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
+using CmsShop.Models.Data;
 
 namespace CmsShop.Models.ViewModels.Pages
 {
@@ -15,6 +17,8 @@ namespace CmsShop.Models.ViewModels.Pages
         }
 
         public int Id { get; set; }
+        [Display(Name = "Zawartość paska bocznego")]
+        [AllowHtml]
         public string Body { get; set; }
     }
 }
