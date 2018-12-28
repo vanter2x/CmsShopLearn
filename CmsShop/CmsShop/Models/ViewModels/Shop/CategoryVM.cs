@@ -1,4 +1,5 @@
-﻿using CmsShop.Models.Data;
+﻿using System.ComponentModel.DataAnnotations;
+using CmsShop.Models.Data;
 
 namespace CmsShop.Models.ViewModels.Shop
 {
@@ -18,6 +19,7 @@ namespace CmsShop.Models.ViewModels.Shop
         }
 
         public int Id { get; set; }
+        [Display(Name = "Nazwa kategorii")]
         public string Name { get; set; }
         public string Slug { get; set; }
         public int Sorting { get; set; }
