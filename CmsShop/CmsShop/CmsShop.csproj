@@ -434,6 +434,7 @@
     <Content Include="Content\fileman\Uploads\Images\DSC_5744.jpg" />
     <Content Include="Content\fileman\Uploads\LICENSE.txt" />
     <Content Include="Content\fileman\Uploads\roxy-fileman-logo.gif" />
+    <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -474,6 +475,7 @@
     <Content Include="Content\fileman\lang\sk.json" />
     <Content Include="Content\fileman\lang\tr.json" />
     <Content Include="Content\fileman\web.config" />
+    <Content Include="Areas\Admin\Views\Shop\Categories.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\ckeditor\ckeditor.php" />
     <Content Include="Scripts\ckeditor\ckeditor_basic.js" />
@@ -842,7 +844,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Admin\Views\Shop\" />
     <Folder Include="Content\fileman\aspnet_client\system_web\2_0_50727\" />
     <Folder Include="Content\fileman\aspnet_client\system_web\4_0_30319\" />
     <Folder Include="Content\fileman\tmp\" />

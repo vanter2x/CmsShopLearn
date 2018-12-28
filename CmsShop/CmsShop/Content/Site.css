@@ -4,3 +4,8 @@
 .ui-state-highlight {
     border: 1px dashed #c0c0c0;
 }
+
+.loader-img {
+    width : 15px;
+    height: 15px;
+}
