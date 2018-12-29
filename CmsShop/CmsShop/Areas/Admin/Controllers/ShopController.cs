@@ -49,5 +49,40 @@ namespace CmsShop.Areas.Admin.Controllers
             }
             return id;
         }
+
+        // POST: Admin/Shop/ReorderCategories
+        [HttpPost]
+        public ActionResult ReorderCategories(int[] id)
+        {
+            using (Db db = new Db())
+            {
+                int count = 1;
+                CategoryDto dto;
+
+                foreach (var catId in id)
+                {
+                    dto = db.Categories.Find(catId);
+                    dto.Sorting = count;
+
+                    db.SaveChanges();
+
+                    count++;
+                }
+            }
+            return View();
+        }
+
+        // GET: Admin/Shop/DeleteCategory
+        public ActionResult DeleteCategory(int id)
+        {
+            using (Db db = new Db())
+            {
+                CategoryDto dto = db.Categories.Find(id);
+
+                db.Categories.Remove(dto);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Categories");
+        }
     }
 }
