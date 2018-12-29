@@ -22,3 +22,7 @@ div.new-cat{
 table.sorting.categories td {
     padding: 20px;
 }
+
+.ajaxdivtd {
+    position: absolute;
+}
