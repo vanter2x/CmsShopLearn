@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using CmsShop.Models.Data;
 using CmsShop.Models.ViewModels.Shop;
@@ -120,6 +121,60 @@ namespace CmsShop.Areas.Admin.Controllers
                 model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
             }
             return View(model);
+        }
+
+        // POST: Admin/Shop/AddProduct
+        [HttpPost]
+        public ActionResult AddProduct(ProductVM model, HttpPostedFileBase file)
+        {
+            if (!ModelState.IsValid)
+            {
+                using (Db db = new Db())
+                {
+                    model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                }
+                return View(model);
+            }
+            //sprawdzenie czy nazwa produktu jest unikalna
+            using (Db db = new Db())
+            {
+                if (db.Products.Any(x => x.Name == model.Name))
+                {
+                    ModelState.AddModelError("","Ta nazwa produktu jest zajęta");
+                    model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                    return View(model);
+                }
+            }
+
+            //deklaracja ProductId
+            int id;
+            using (Db db = new Db())
+            {
+                ProductDto product = new ProductDto();
+                product.Name = model.Name;
+                product.Slug = model.Slug.Replace(" ", "-").ToLower();
+                product.Description = model.Description;
+                product.Price = model.Price;
+                product.CategoryId = model.CategoryId;
+
+                CategoryDto catDto = db.Categories.FirstOrDefault(x => x.Id == model.CategoryId);
+                product.CategoryName = catDto.Name;
+
+                db.Products.Add(product);
+                db.SaveChanges();
+
+                id = product.Id;
+            }
+
+            TempData["SM"] = "Dodałeś produkt do bazy.";
+
+            #region Upload Image
+
+            
+
+            #endregion
+
+            return View();
         }
     }
 }
