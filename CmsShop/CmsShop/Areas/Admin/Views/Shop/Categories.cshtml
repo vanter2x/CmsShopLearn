@@ -138,34 +138,39 @@ else
 
             // Potwierdzenie usuwania kategorii
 
-            $("body").on("click",
-                "a.delete",
-                function () {
-                    if (!confirm("Potwierdzasz usunięcie kategorii"))
-                        return false;
-                });
+            $("body").on("click", "a.delete", function () {
+                if (!confirm("Potwierdzasz usunięcie kategorii"))
+                    return false;
+            });
             //########################################################################################################
 
             // Zmiana nazwy kategorii
 
             var orginalTextBoxValue;
+            var $this;
+            var singleEdit = false;
             $("table#pages input.text-box").dblclick(function () {
-                orginalTextBoxValue = $(this).val();
-                $(this).attr("readonly", false);
+                if (singleEdit == false) {
+                    orginalTextBoxValue = $(this).val();
+                    $(this).attr("readonly", false);
+                    singleEdit = true;
+                    $this = $(this);
+                }
+                
             });
 
             $("table#pages input.text-box").keyup(function (e) {
-                if (keyCode == 13) {
-                    $(this).blur();
+                if (e.keyCode == 13) {
+                    $this.blur();
                 }
-            });
+            })
 
             $("table#pages input.text-box").blur(function () {
-                var $this = $(this);
+                //var $this = $(this);
                 var ajaxdiv = $this.parent().find(".ajaxdivtd");
                 var newCatName = $this.val();
                 var id = $this.parent().parent().attr("id").substring(3);
-                var url = "admin/shop/RenameCategory";
+                var url = "/admin/shop/RenameCategory";
 
                 if (newCatName.length < 2) {
                     alert("Nazwa kategorii musie mieć co najmniej 2 znaki.");
@@ -183,17 +188,17 @@ else
                     }
 
                     setTimeout(function () {
-                        ajaxdiv.fadeOut("fast",
-                            function () {
-                                ajaxdiv.html("");
-                            });
+                        ajaxdiv.fadeOut("fast", function () {
+                            ajaxdiv.html("");
+                        })
                     }, 2000);
 
                 }).done(function () {
                     $this.attr("readonly", true);
-                });
-            });
-        });
+                    })
+                singleEdit = false;
+            })
+        })
     </script>
 
 }
