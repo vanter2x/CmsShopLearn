@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using CmsShop.Models.Data;
 using CmsShop.Models.ViewModels.Shop;
@@ -152,7 +154,7 @@ namespace CmsShop.Areas.Admin.Controllers
             {
                 ProductDto product = new ProductDto();
                 product.Name = model.Name;
-                product.Slug = model.Slug.Replace(" ", "-").ToLower();
+                product.Slug = model.Name.Replace(" ", "-").ToLower();
                 product.Description = model.Description;
                 product.Price = model.Price;
                 product.CategoryId = model.CategoryId;
@@ -170,11 +172,61 @@ namespace CmsShop.Areas.Admin.Controllers
 
             #region Upload Image
 
-            
+            //Utworzenie struktury katalogów
+            var originalDirectory = new DirectoryInfo(string.Format("{0}Images\\Uploads", Server.MapPath(@"\")));
 
+            string[] pathStrings = new string[5]; 
+
+            pathStrings[0] = Path.Combine(originalDirectory.ToString(), "Products");
+            pathStrings[1] = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString());
+            pathStrings[2] = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Thumbs");
+            pathStrings[3] = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery");
+            pathStrings[4] = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery\\Thumbs");
+
+            foreach (var pathString in pathStrings)
+            {
+                if (!Directory.Exists(pathString))
+                    Directory.CreateDirectory(pathString);
+            }
+
+            if (file != null && file.ContentLength > 0)
+            {
+                //sprawdzenie rozszerzenia pliku
+                string ext = file.ContentType.ToLower();
+                if (ext != "image/jpg" && ext != "image/jpeg" && ext != "image/gif"
+                    && ext != "image/png" && ext != "image/x-png")
+                {
+                    using (Db db = new Db())
+                    {
+                        model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                        ModelState.AddModelError("", "Obraz nie został przesłany.");
+                        return View(model);
+                    }
+                }
+                //inicjalizacja nazwy obrazka
+                string imageName = file.FileName;
+
+                using (Db db = new Db())
+                {
+                    ProductDto dto = db.Products.Find(id);
+                    dto.ImageName = imageName;
+                    db.SaveChanges();
+                }
+
+                var path = string.Format("{0}\\{1}", pathStrings[1], imageName);
+                var path2 = string.Format("{0}\\{1}", pathStrings[2], imageName);
+
+                //zapis obrazka
+                file.SaveAs(path);
+
+                //zapis miniaturki
+                WebImage img = new WebImage(file.InputStream);
+                img.Resize(200, 200);
+                img.Save(path2);
+            }
             #endregion
 
-            return View();
+            return RedirectToAction("AddProduct");
         }
     }
 }
