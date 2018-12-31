@@ -259,5 +259,31 @@ namespace CmsShop.Areas.Admin.Controllers
 
             return View(listOfProductVM);
         }
+
+        // GET: Admin/Shop/Products
+        [HttpGet]
+        public ActionResult EditProduct(int id)
+        {
+            ProductVM model;
+            using (Db db = new Db())
+            {
+                ProductDto dto = db.Products.Find(id);
+
+                if (dto == null)
+                    return Content("Ten produkt nie istnieje");
+
+                model = new ProductVM(dto);
+
+                //lista ketogorii
+                model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+
+                //ustawiamy zdjęcia
+                model.GalleryImages = Directory
+                    .EnumerateFiles(Server.MapPath("~/Images/Uploads/Products/" + id + "/Gallery/Thumbs"))
+                    .Select(fn => Path.GetFileName(fn));
+            }
+
+            return View(model);
+        }
     }
 }
